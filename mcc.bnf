@@ -1,0 +1,65 @@
+program             : {decl}
+initializer         : assignment_exp
+type_name           : qual_spec [abstract_declarator]
+pointer             : '*' {qualifier}+ [pointer]
+enumerator          : id ['=' exp]
+
+# specifier
+storage_class       : 'auto' | 'register' | 'stmtic' | 'extern' | 'typedef'
+qualifier           : 'const' | 'volatile'
+specifier           : 'void' | 'char' | 'short' | 'int' | 'long' | 'float' | 'double' | 'signed' | 'unsigned'
+decl_spec           : {qualifier | specifier | storage_class }
+qual_spec           : {specifier | qualifier}
+
+# declaration
+decl                : function_decl | variable_decl
+function_decl       : decl_spec declarator [compound_stmt]
+variable_decl       : decl_spec declarator [= initializer] {',' declarator [= initializer]}  ';'
+param_decl          : qual_spec [declarator]
+
+# declarator
+declarator          : [pointer] <id | '(' declarator ')'> <array_declarator | func_declarator>
+array_declarator    : {'[' [exp] ']'}
+func_declarator     : '(' {param_decl ','} ['...'] ')'
+
+# statement
+stmt                : ';'
+                    | exp ';'
+                    | 'if'     '(' exp ')' stmt ['else' stmt]
+                    | 'switch' '(' exp ')' stmt
+                    | 'while' '(' exp ')' stmt
+                    | 'do' stmt 'while' '(' exp ')' ';'
+                    | 'for' '(' [exp] ';' [exp] ';' [exp] ')' stmt
+                    | 'goto' id    ';'
+                    | 'continue'   ';'
+                    | 'break'      ';'
+                    | 'return' exp ';'
+                    | 'return'     ';'
+                    | id               ':'
+                    | 'case' exp ':'
+                    | 'default'        ':'
+                    | '{' {variable_decl} {stmt} '}'
+
+# expression
+assignment_operator : '=' | '*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|='
+unary_operator      : '&' | '*' | '+' | '-' | '~' | '!' | '++' | '--'
+
+exp                 : [exp ','] assignment_exp
+assignment_exp      : conditional_exp | unary_exp assignment_operator assignment_exp
+conditional_exp     : logical_or_exp ['?' exp ':' conditional_exp]
+logical_or_exp      : [logical_or_exp  '||'] logical_and_exp
+logical_and_exp     : [logical_and_exp '&&'] inclusive_or_exp
+inclusive_or_exp    : [inclusive_or_exp '|'] exclusive_or_exp
+exclusive_or_exp    : [exclusive_or_exp '^'] and_exp
+and_exp             : [and_exp '&'] equality_exp
+equality_exp        : [equality_exp <'=='|'!='>] relational_exp
+relational_exp      : [relational_exp <'<'|'>'|'<='|'>='>] shift_expression
+shift_expression    : [shift_expression <'<<'|'>>'>] additive_exp
+additive_exp        : [additive_exp <'+'|'-'>] mult_exp
+mult_exp            : mult_exp <'*'|'/'|'%'> unary_exp
+unary_exp           : postfix_exp | unary_operator unary_exp
+postfix_exp         : primary_exp
+                    | postfix_exp '[' exp ']'
+                    | postfix_exp '(' {assignment_exp, ','} ')'
+                    | postfix_exp <'++'|'--">
+primary_exp         : id | int_const | float_const | char_const | string | '(' exp ')'

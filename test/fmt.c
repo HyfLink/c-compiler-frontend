@@ -1,0 +1,1 @@
+int main(void){int i=0;i=i+1;i=1-i;i+=10;double j=i+i/1;for(i=j;i<10;i++);return j;}
