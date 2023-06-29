@@ -105,9 +105,9 @@ auto AstHighlighter::visitAstStmtSelectionSwitch(AstStmtSelectionSwitch &ast) ->
 auto AstHighlighter::visitAstStmtIterationFor(AstStmtIterationFor &ast) -> void {
     os() << MCC_COLOR_MAGENTA "for" MCC_COLOR_RESET "(";
     if (ast.init()) ast.init()->accept(*this);
-    m_os << ';';
+    m_os << "; ";
     if (ast.cond()) ast.cond()->accept(*this);
-    m_os << ';';
+    m_os << "; ";
     if (ast.iter()) ast.iter()->accept(*this);
     m_os << ")\n";
     indent([&] { ast.body()->accept(*this); });

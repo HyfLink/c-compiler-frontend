@@ -10,6 +10,5 @@ int main() {
     for (; STR < 5; ++STR) {
         char ch = str1[STR];
     }
-
     return 0;
 }
